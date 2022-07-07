@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-xl navbar-light bg-light">
+	<a href="#" class="navbar-brand"><i class="fas fa-bible"></i>Méditons<b> la Bible</b></a>
+	<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<!-- Collection of nav links, forms, and other content for toggling -->
+	<div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+		<div class="navbar-nav">
+			<a href="{{route('home')}}" class="nav-item nav-link active">Acceuil</a>
+			<a href="#" class="nav-item nav-link">Contact</a>
+		</div>
+		
+		<div class="navbar-nav ml-auto">
+			@if(auth.isGuest)
+			<a href="{{route('login')}}" class="nav-item nav-link">Connexion</a>
+			@endif
+
+			@if(auth.isLoggedIn)
+			<a href="{{route('all')}}" class="nav-item nav-link notifications"><i class="fa fa-bell-o"></i><span class="badge">1</span></a>
+			<div class="nav-item dropdown">
+				<a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"> {{auth.user.name}} {{auth.user.firstname}} <b class="caret"></b></a>
+				<div class="dropdown-menu">
+					<a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a></a>
+					<div class="dropdown-divider"></div>
+					<a href="{{route('logout')}}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Déconnexion</a></a>
+				</div>
+			</div>
+			@endif
+		</div>
+		
+	</div>
+</nav>

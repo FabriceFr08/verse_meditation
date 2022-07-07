@@ -1,0 +1,133 @@
+@layout('layouts/app')
+
+@section('content')
+<div class="container-xl">
+	<div class="table-responsive">
+		@!component('components/flash')
+		<div class="table-wrapper">
+			
+			<div class="table-title">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2>Mes <b>Méditations</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="#addMeditationModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Ajouter</span></a>						
+					</div>
+				</div>
+			</div>
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Titre</th>
+						<th>Versets</th>
+						<th>Commentaire</th>
+						<th>Auteur</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					@each(meditation in meditations)
+					
+					<tr>
+						<td>{{meditation.id}}</td>
+						<td>{{meditation.title}}</td>
+						<td>{{meditation.verse}}</td>
+						<td>{{meditation.note}}</td>
+						<td>{{meditation.user.username}}</td>
+						<td>
+							
+							<a href="{{route('show', {id : meditation.id})}}" class="read" ><i class="material-icons" data-toggle="tooltip" title="Lire">visibility</i></a>
+							@if(meditation.user.id == auth.user.id)
+							<a href="#deleteMeditationModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Supprimer">delete</i></a>
+							@endif
+							<a href="{{route('updateF', {id : meditation.id})}}" class="edit" ><i class="material-icons" title="Editer">edit</i></a>
+							
+						</td>
+						
+						<!-- Create Meditation -->
+					<div id="addMeditationModal" class="modal fade">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<form method="POST" action="{{route('create', {id : auth.user.id}) }}">
+									<div class="modal-header">						
+										<h4 class="modal-title">Ajouter une méditation</h4>
+										<button type="button" class="close" -dismiss="modal" aria-hidden="true">&times;</button>
+									</div>
+									<div class="modal-body">					
+										<div class="form-group">
+											<label>Titre</label>
+											<input type="text" class="form-control" name="title" required>
+										</div>
+										<div class="form-group">
+											<label>Versets</label>
+											<input type="text" class="form-control" name="verse" required>
+										</div>
+										<div class="form-group">
+											<label>Commentaire</label>
+											<textarea class="form-control" name="note" required></textarea>
+										</div>					
+									</div>
+									<div class="modal-footer">
+										<input type="button" class="btn btn-default" data-dismiss="modal" value="Annuler">
+										<input type="submit" class="btn btn-success" value="Ajouter">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					</tr>
+					
+			
+			
+			<!-- Delete Meditation -->
+			<div id="deleteMeditationModal" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form method="POST" action="{{route('delete', {id : meditation.id})}}">
+							<div class="modal-header">						
+								<h4 class="modal-title">Supprimer cette méditation</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">					
+								<p>Etes vous sûr de supprimer cette méditation ?</p>
+								<p class="text-warning"><small>Cette action est irréversible</small></p>
+							</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-default" data-dismiss="modal" value="Annuler">
+								<input type="submit" class="btn btn-danger" value="Supprimer">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+					
+					@endeach
+				</tbody>
+			</table>
+			
+			
+
+			<!--Pagination-->
+			<div class="clearfix">
+				<div class="hint-text">Affichage <b>des</b> <b>méditations</b></div>
+				<ul class="pagination">
+					<li class="page-item disabled"><a href="{{meditations.currentPage == meditations.firstPage ? '' : meditations.getPreviousPageUrl()}}">Précédent</a></li>
+					@each(anchor in meditations.getUrlsForRange(1, meditations.lastPage))
+					<li class="{{ anchor.isActive ? 'active' : '' }}"><a href="{{anchor.url}}" class="page-link">{{anchor.page}}</a></li>
+					@endeach
+					<li class="page-item"><a href="{{meditations.currentPage == meditations.lastPage ? '' : meditations.getNextPageUrl()}}" class="page-link">Suivant</a></li>
+					
+				</ul>
+			</div>
+				
+		</div>
+	</div>        
+</div>
+
+
+
+
+@end
